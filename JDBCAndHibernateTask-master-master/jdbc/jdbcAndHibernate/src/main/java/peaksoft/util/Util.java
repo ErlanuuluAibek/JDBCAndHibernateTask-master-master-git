@@ -1,5 +1,9 @@
 package peaksoft.util;
 
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import peaksoft.model.User;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -23,5 +27,18 @@ public class Util {
             System.out.println(e.getMessage());
         }
         return connection;
+    }
+    private static SessionFactory sess() {
+        SessionFactory sessionFactory = null;
+        try {
+            sessionFactory =  new Configuration().configure("hibernate.cfg.xml")
+                    .buildSessionFactory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sessionFactory;
+    }
+    public static SessionFactory getSessionFactory(){
+        return sess();
     }
 }

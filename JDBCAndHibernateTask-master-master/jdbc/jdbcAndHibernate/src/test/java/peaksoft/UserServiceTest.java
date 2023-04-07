@@ -2,6 +2,7 @@ package peaksoft;
 
 import org.junit.Assert;
 import org.junit.Test;
+import peaksoft.dao.UserDaoHibernateImpl;
 import peaksoft.model.User;
 import peaksoft.service.UserService;
 import peaksoft.service.UserServiceImpl;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class UserServiceTest {
 
-    private final UserService userService = new UserServiceImpl();
+    private final UserDaoHibernateImpl userDaoHibernate = new UserDaoHibernateImpl();
 
     private final String testName = "Kanat";
     private final String testLastName = "Subanov";
@@ -19,8 +20,8 @@ public class UserServiceTest {
     @Test
     public void dropUsersTable() {
         try {
-            userService.dropUsersTable();
-            userService.dropUsersTable();
+            userDaoHibernate.dropUsersTable();
+            userDaoHibernate.dropUsersTable();
         } catch (Exception e) {
             Assert.fail("При тестировании удаления таблицы произошло исключение\n" + e);
         }
@@ -29,8 +30,8 @@ public class UserServiceTest {
     @Test
     public void createUsersTable() {
         try {
-            userService.dropUsersTable();
-            userService.createUsersTable();
+            userDaoHibernate.dropUsersTable();
+            userDaoHibernate.createUsersTable();
         } catch (Exception e) {
             Assert.fail("При тестировании создания таблицы пользователей произошло исключение\n" + e.getMessage());
         }
@@ -39,11 +40,11 @@ public class UserServiceTest {
     @Test
     public void saveUser() {
         try {
-            userService.dropUsersTable();
-            userService.createUsersTable();
-            userService.saveUser(testName, testLastName, testAge);
+            userDaoHibernate.dropUsersTable();
+            userDaoHibernate.createUsersTable();
+            userDaoHibernate.saveUser(testName, testLastName, testAge);
 
-            User user = userService.getAllUsers().get(0);
+            User user = userDaoHibernate.getAllUsers().get(0);
 
             if (!testName.equals(user.getName())
                     || !testLastName.equals(user.getLastName())
@@ -60,10 +61,10 @@ public class UserServiceTest {
     @Test
     public void removeUserById() {
         try {
-            userService.dropUsersTable();
-            userService.createUsersTable();
-            userService.saveUser(testName, testLastName, testAge);
-            userService.removeUserById(1L);
+            userDaoHibernate.dropUsersTable();
+            userDaoHibernate.createUsersTable();
+            userDaoHibernate.saveUser(testName, testLastName, testAge);
+            userDaoHibernate.removeUserById(1L);
         } catch (Exception e) {
             Assert.fail("При тестировании удаления пользователя по id произошло исключение\n" + e);
         }
@@ -72,10 +73,10 @@ public class UserServiceTest {
     @Test
     public void getAllUsers() {
         try {
-            userService.dropUsersTable();
-            userService.createUsersTable();
-            userService.saveUser(testName, testLastName, testAge);
-            List<User> userList = userService.getAllUsers();
+            userDaoHibernate.dropUsersTable();
+            userDaoHibernate.createUsersTable();
+            userDaoHibernate.saveUser(testName, testLastName, testAge);
+            List<User> userList = userDaoHibernate.getAllUsers();
 
             if (userList.size() != 1) {
                 Assert.fail("Проверьте корректность работы метода сохранения пользователя/удаления или создания таблицы");
@@ -88,16 +89,17 @@ public class UserServiceTest {
     @Test
     public void cleanUsersTable() {
         try {
-            userService.dropUsersTable();
-            userService.createUsersTable();
-            userService.saveUser(testName, testLastName, testAge);
-            userService.cleanUsersTable();
+            userDaoHibernate.dropUsersTable();
+            userDaoHibernate.createUsersTable();
+            userDaoHibernate.saveUser(testName, testLastName, testAge);
+            userDaoHibernate.cleanUsersTable();
 
-            if (userService.getAllUsers().size() != 0) {
+            if (userDaoHibernate.getAllUsers().size() != 0) {
                 Assert.fail("Метод очищения таблицы пользователей реализован не корректно");
             }
         } catch (Exception e) {
             Assert.fail("При тестировании очистки таблицы пользователей произошло исключение\n" + e);
         }
+
     }
 }
